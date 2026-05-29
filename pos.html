@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>POS System</title>
+  <link rel="stylesheet" href="pos.css" />
+</head>
+<body>
+
+<div class="app">
+
+  <!-- ========================
+       LEFT: ORDER PANEL
+       ======================== -->
+  <aside class="sidebar">
+
+    <div class="sidebar-header">
+      <div class="order-type" id="headerOrderType">Take Away Order</div>
+      <div class="register-label">Register: Default POS Menu</div>
+    </div>
+
+    <div class="order-items-wrapper" id="orderItems">
+      <!-- filled by JS -->
+    </div>
+
+    <div class="sidebar-total">
+      <div class="total-row">
+        <span class="label">Subtotal</span>
+        <span class="value" id="orderSubtotal">$0.00</span>
+      </div>
+      <div class="total-row grand">
+        <span class="label">Total</span>
+        <span class="value" id="orderTotal">$0.00</span>
+      </div>
+    </div>
+
+    <div class="sidebar-actions">
+      <button class="btn-save" onclick="showToast('Order saved')">Save</button>
+      <button class="btn-pay" id="payBtn" onclick="openPayModal()" disabled>Pay</button>
+    </div>
+
+  </aside>
+
+
+  <!-- ========================
+       RIGHT: MAIN AREA
+       ======================== -->
+  <div class="main">
+
+    <!-- Top header -->
+    <header class="top-header">
+      <button class="hamburger-btn" title="Menu">
+        <span></span><span></span><span></span>
+      </button>
+      <span class="header-title">Register: Default POS Menu</span>
+      <div class="header-icons">
+        <button class="icon-btn" onclick="showToast('VICKY logged in')">
+          👤 VICKY
+        </button>
+        <button class="icon-btn" onclick="showToast('Refreshed')">
+          ↺
+        </button>
+        <button class="icon-btn">⋯</button>
+      </div>
+    </header>
+
+    <!-- Table bar -->
+    <div class="table-bar" id="tableBar">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- Category bar -->
+    <div class="category-bar" id="categoryBar">
+      <!-- filled by JS -->
+    </div>
+
+    <!-- QTY selector + Product grid -->
+    <div class="products-area">
+
+      <div class="qty-selector">
+        <span>QTY</span>
+        <button class="qty-chip active" data-qty="1" onclick="setQty(1)">1</button>
+        <button class="qty-chip" data-qty="2" onclick="setQty(2)">2</button>
+        <button class="qty-chip" data-qty="3" onclick="setQty(3)">3</button>
+        <button class="qty-chip" data-qty="4" onclick="setQty(4)">4</button>
+        <button class="qty-chip" data-qty="5" onclick="setQty(5)">5</button>
+        <button class="qty-chip" data-qty="6" onclick="setQty(6)">6</button>
+        <button class="qty-chip" data-qty="7" onclick="setQty(7)">7</button>
+        <button class="qty-chip" data-qty="8" onclick="setQty(8)">8</button>
+        <button class="qty-chip" data-qty="9" onclick="setQty(9)">9</button>
+        <button class="qty-chip" data-qty="10" onclick="setQty(10)">10</button>
+      </div>
+
+      <div class="product-grid" id="productGrid">
+        <!-- filled by JS -->
+      </div>
+
+    </div><!-- /products-area -->
+
+    <!-- Bottom bar -->
+    <div class="bottom-bar">
+      <div class="search-btn" onclick="showToast('Search coming soon')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+        </svg>
+        <span>Scan barcode or search</span>
+      </div>
+      <button class="bottom-btn orders-btn" onclick="showToast('Orders panel coming soon')">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="2"/>
+          <line x1="9" y1="12" x2="15" y2="12"/>
+          <line x1="9" y1="16" x2="13" y2="16"/>
+        </svg>
+        ORDERS
+      </button>
+      <button class="bottom-btn" onclick="showToast('Custom item coming soon')">
+        + CUSTOM
+      </button>
+    </div>
+
+  </div><!-- /main -->
+
+</div><!-- /app -->
+
+
+<!-- ========================
+     MODIFIER MODAL
+     ======================== -->
+<div class="modal-overlay" id="modModal">
+  <div class="modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title" id="modModalTitle">Product</div>
+        <div class="modal-subtitle" id="modModalSubtitle">$0.00</div>
+      </div>
+      <button class="modal-close" onclick="closeModModal()">✕ Close</button>
+    </div>
+    <div class="modal-body" id="modModalBody">
+      <!-- modifier groups inserted by JS -->
+    </div>
+    <div class="modal-footer">
+      <button class="btn-add-to-order" onclick="confirmMod()">
+        Add to Order
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- ========================
+     PAYMENT MODAL
+     ======================== -->
+<div class="modal-overlay" id="payModal">
+  <div class="modal payment-modal">
+    <div class="modal-header">
+      <div>
+        <div class="modal-title">Payment</div>
+        <div class="modal-subtitle">Select payment method</div>
+      </div>
+      <button class="modal-close" onclick="closePayModal()">✕ Close</button>
+    </div>
+    <div class="modal-body">
+      <div class="payment-amount">
+        <div class="amount-label">TOTAL DUE</div>
+        <div class="amount-value" id="payAmount">$0.00</div>
+      </div>
+      <div class="payment-methods">
+        <button class="pay-method-btn" data-method="card" onclick="selectPayMethod('card')">
+          <div class="pm-icon">💳</div>
+          <div class="pm-name">Card</div>
+        </button>
+        <button class="pay-method-btn" data-method="cash" onclick="selectPayMethod('cash')">
+          <div class="pm-icon">💵</div>
+          <div class="pm-name">Cash</div>
+        </button>
+        <button class="pay-method-btn" data-method="tap" onclick="selectPayMethod('tap')">
+          <div class="pm-icon">📱</div>
+          <div class="pm-name">Tap &amp; Pay</div>
+        </button>
+        <button class="pay-method-btn" data-method="voucher" onclick="selectPayMethod('voucher')">
+          <div class="pm-icon">🎟</div>
+          <div class="pm-name">Voucher</div>
+        </button>
+      </div>
+      <button class="btn-confirm-pay" onclick="confirmPayment()">
+        Confirm Payment
+      </button>
+    </div>
+  </div>
+</div>
+
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script src="pos.js"></script>
+</body>
+</html>
